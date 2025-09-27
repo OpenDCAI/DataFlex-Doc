@@ -1,11 +1,11 @@
 ---
-title: 案例1. Less算法
+title: 向Dataflex添加算子
 createTime: 2025/06/30 19:19:16
 permalink: /zh/guide/translation/
 icon: basil:lightning-alt-outline
 ---
 
-# Less算法
+# 向Dataflex添加算子
 
 # 如何在 DataFlex 中添加自定义选择器
 
