@@ -35,17 +35,17 @@ export const enNavbar = defineNavbarConfig([
                 ]
             },
             {
-                text: 'Start with Dataflow',
+                text: 'Dataflex Selector',
                 items: [
                     {
                         text: 'Installation',
-                        link: '/en/notes/guide/quickstart/install.md',
+                        link: '/en/notes/guide/selector/install.md',
                         icon: 'material-symbols-light:download-rounded',
                         activeMatch: '^/guide/'
                     },
                     {
                         text: 'Quick Start',
-                        link: '/en/notes/guide/quickstart/quickstart.md',
+                        link: '/en/notes/guide/selector/tutorial.md',
                         icon: 'solar:flag-2-broken',
                         activeMatch: '^/guide/'
                     }

@@ -6,3 +6,4 @@ permalink: /en/guide/basicinfo/framework/
 ---
 
 # Framework Design
+

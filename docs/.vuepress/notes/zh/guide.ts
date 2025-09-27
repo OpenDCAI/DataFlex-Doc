@@ -13,6 +13,7 @@ export const Guide: ThemeNote = defineNoteConfig({
             items: [
                 'intro',
                 'framework',
+                'install',
             ],
         },
         {
@@ -21,9 +22,8 @@ export const Guide: ThemeNote = defineNoteConfig({
             icon: 'carbon:idea',
             prefix: 'quickstart',
             items: [
-                'install',
                 'quickstart',
-                'translation',
+                'tutorial',
             ],
         },
     ],
