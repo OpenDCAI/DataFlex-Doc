@@ -17,7 +17,7 @@ export const Guide: ThemeNote = defineNoteConfig({
             ],
         },
         {
-            text: '从这里开始',
+            text: 'Dataflex Selector',
             collapsed: false,
             icon: 'carbon:idea',
             prefix: 'quickstart',
