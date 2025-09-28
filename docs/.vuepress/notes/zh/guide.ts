@@ -20,7 +20,27 @@ export const Guide: ThemeNote = defineNoteConfig({
             text: 'Dataflex Selector',
             collapsed: false,
             icon: 'carbon:idea',
-            prefix: 'quickstart',
+            prefix: 'selector',
+            items: [
+                'quickstart',
+                'tutorial',
+            ],
+        },
+        {
+            text: 'Dataflex Mixer',
+            collapsed: false,
+            icon: 'carbon:idea',
+            prefix: 'mixer',
+            items: [
+                'quickstart',
+                'tutorial',
+            ],
+        },
+        {
+            text: 'Dataflex Weighter',
+            collapsed: false,
+            icon: 'carbon:idea',
+            prefix: 'weighter',
             items: [
                 'quickstart',
                 'tutorial',

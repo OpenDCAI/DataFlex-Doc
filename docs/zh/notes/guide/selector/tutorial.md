@@ -1,7 +1,7 @@
 ---
 title: 向Dataflex添加算子
 createTime: 2025/06/30 19:19:16
-permalink: /zh/guide/translation/
+permalink: /zh/guide/selector/tutorial/
 icon: basil:lightning-alt-outline
 ---
 
