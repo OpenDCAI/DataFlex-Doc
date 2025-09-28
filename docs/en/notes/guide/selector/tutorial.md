@@ -1,11 +1,11 @@
 ---
-title: Contribute to Dataflex Selector
+title: Add Selector to Dataflex
 createTime: 2025/06/30 19:19:16
-permalink: /en/guide/translation/
-icon: basil:lightning-alt-outline
+permalink: /en/guide/selector/tutorial/
+icon: solar:add-circle-outline
 ---
 
-# Less Algorithm
+# Add Selector to Dataflex
 
 This document will detail how to add and configure a custom data selector in the DataFlex framework, enabling dynamic sample selection during the training process, using `custom_selector` as an example.
 ## Step 1: Create the Selector Implementation File
