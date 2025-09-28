@@ -2,7 +2,7 @@
 title: 向Dataflex添加Mixer
 createTime: 2025/06/30 19:19:16
 permalink: /zh/guide/mixer/tutorial/
-icon: basil:lightning-alt-outline
+icon: solar:add-circle-outline
 ---
 
 # 向Dataflex添加Mixer

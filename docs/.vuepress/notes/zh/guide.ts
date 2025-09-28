@@ -19,7 +19,7 @@ export const Guide: ThemeNote = defineNoteConfig({
         {
             text: 'Dataflex Selector',
             collapsed: false,
-            icon: 'carbon:idea',
+            icon: 'solar:filter-outline',
             prefix: 'selector',
             items: [
                 'quickstart',
@@ -29,7 +29,7 @@ export const Guide: ThemeNote = defineNoteConfig({
         {
             text: 'Dataflex Mixer',
             collapsed: false,
-            icon: 'carbon:idea',
+            icon: 'solar:shuffle-outline',
             prefix: 'mixer',
             items: [
                 'quickstart',
@@ -39,7 +39,7 @@ export const Guide: ThemeNote = defineNoteConfig({
         {
             text: 'Dataflex Weighter',
             collapsed: false,
-            icon: 'carbon:idea',
+            icon: 'solar:scale-outline',
             prefix: 'weighter',
             items: [
                 'quickstart',

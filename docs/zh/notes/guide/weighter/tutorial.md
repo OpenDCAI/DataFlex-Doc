@@ -2,7 +2,7 @@
 title: 向Dataflex添加Weighter
 createTime: 2025/06/30 19:19:16
 permalink: /zh/guide/weighter/tutorial/
-icon: basil:lightning-alt-outline
+icon: solar:add-circle-outline
 ---
 
 # 向Dataflex添加Weighter
