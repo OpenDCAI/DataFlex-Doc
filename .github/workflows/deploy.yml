@@ -31,7 +31,7 @@ jobs:
       # 安装依赖
       # Install dependencies
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
 
 

@@ -1,19 +1,19 @@
 ---
-title: Quick Start
+title: 快速开始
 createTime: 2025/06/30 19:19:16
-permalink: /en/guide/selector/quickstart/
+permalink: /zh/guide/selector/quickstart/
 icon: solar:bolt-outline
 ---
 
-# Quick Start
+# 快速开始
 
-The launch command is similar to [LlamaFactory](https://github.com/hiyouga/LLaMA-Factory). Below is an example using [LESS](https://arxiv.org/abs/2402.04333):
+启动命令类似于 [LlamaFactory](https://github.com/hiyouga/LLaMA-Factory)。以下是使用 [LESS](https://arxiv.org/abs/2402.04333) 的示例：
 
 ```bash
 FORCE_TORCHRUN=1 DISABLE_VERSION_CHECK=1 dataflex-cli train examples/train_lora/selectors/less.yaml
 ```
 
-Unlike vanilla LlamaFactory, your `.yaml` config file must include **DataFlex-specific parameters**:
+与普通的 LlamaFactory 不同，您的 `.yaml` 配置文件必须包含 **DataFlex 特定的参数**：
 
 ```yaml
 ### dynamic_train

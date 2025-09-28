@@ -1,11 +1,11 @@
 ---
-title: 向Dataflex添加算子
+title: 向Dataflex添加Selector
 createTime: 2025/06/30 19:19:16
-permalink: /zh/guide/translation/
-icon: basil:lightning-alt-outline
+permalink: /zh/guide/selector/tutorial/
+icon: solar:add-circle-outline
 ---
 
-# 向Dataflex添加算子
+# 向Dataflex添加Selector
 
 # 如何在 DataFlex 中添加自定义选择器
 
