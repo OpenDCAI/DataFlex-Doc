@@ -17,10 +17,9 @@ FORCE_TORCHRUN=1 DISABLE_VERSION_CHECK=1 dataflex-cli train examples/train_lora/
 
 ```yaml
 ### dynamic_train
-train_type: dynamic_weight
+train_type: dynamic_weight 
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss
-warmup_step: 200
-update_step: 400
-update_times: 5
+warmup_step: 1
+train_step: 3 # 总训练步数（包括warm_up） 
 ```
