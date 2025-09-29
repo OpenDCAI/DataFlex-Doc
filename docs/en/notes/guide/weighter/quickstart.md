@@ -17,10 +17,9 @@ Unlike vanilla LlamaFactory, your `.yaml` config file must include **DataFlex-sp
 
 ```yaml
 ### dynamic_train
-train_type: dynamic_weight
+train_type: dynamic_weight 
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss
-warmup_step: 200
-update_step: 400
-update_times: 5
+warmup_step: 1
+train_step: 3 # total train steps (including warmup)
 ```

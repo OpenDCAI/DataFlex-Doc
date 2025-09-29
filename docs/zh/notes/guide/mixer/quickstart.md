@@ -23,6 +23,4 @@ component_name: random
 warmup_step: 100
 update_step: 200
 update_times: 3
-
-eval_dataset: mmlu_eval
 ```
