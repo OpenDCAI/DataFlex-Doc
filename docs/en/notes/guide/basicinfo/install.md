@@ -9,8 +9,8 @@ permalink: /en/guide/install/
 Run the following commands to install:
 
 ```bash
-git clone https://github.com/OpenDCAI/DataFlex-Preview.git
-cd DataFlex-Preview
+git clone https://github.com/OpenDCAI/DataFlex.git
+cd DataFlex
 pip install -e .
 pip install llamafactory
 ```
