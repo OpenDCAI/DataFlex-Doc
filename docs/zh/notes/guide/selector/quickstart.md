@@ -2,7 +2,7 @@
 title: 快速开始
 createTime: 2025/06/30 19:19:16
 permalink: /zh/guide/selector/quickstart/
-icon: select-window
+icon: solar:bolt-outline
 ---
 
 # 快速开始
