@@ -1,3 +1,9 @@
+---
+title: Zero Order Data Selection
+createTime: 2025/11/03 22:58:52
+permalink: /en/guide/0rfxa64a/
+icon: tabler:chart-dots-3
+---
 # Introduction to the Zeroth Selector
 This document explains how to use the **Zeroth Selector** in the **DataFlex** framework to achieve dynamic selection of training data, thereby enhancing the performance of supervised fine-tuning (SFT). This method is an original selection approach that utilizes co-directional perturbations on the model for differential estimation, thereby obtaining the model's zeroth-order gradient to calculate the effective score of the data.
 

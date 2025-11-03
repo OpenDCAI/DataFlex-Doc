@@ -1,3 +1,9 @@
+---
+title: 零阶优化数据选择器
+createTime: 2025/11/03 22:58:52
+permalink: /zh/guide/wl9tf7o2/
+icon: tabler:chart-dots-3
+---
 # 零阶选择器介绍
 本文档介绍如何在 **DataFlex** 框架中使用 **Zeroth Selector** 实现训练数据的动态选择，从而提升监督微调（SFT）效果。该方法为原创选择方法，利用对模型进行同向扰动进行差分估计，进而得到模型的零阶梯度来计算数据有效分数。
 
