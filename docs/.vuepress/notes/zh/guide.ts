@@ -26,6 +26,7 @@ export const Guide: ThemeNote = defineNoteConfig({
                 'tutorial',
                 'selector_less',
                 'selector_tsds',
+                'selector_zeroth',
             ],
         },
         {
