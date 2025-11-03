@@ -6,7 +6,7 @@ permalink: /zh/guide/intro/basicinfo/intro/
 ---
 # 简介
 
-近年来，大模型的发展在很大程度上依赖于大规模且高质量的训练数据。首先，高质量数据集的准备至关重要，这一环节由我们在另一个项目 [DataFlow](https://github.com/OpenDCAI/DataFlow/tree/main) 中完成。在此基础上，训练阶段的数据与模型交互同样关键，例如：在训练过程中进行数据选择、配比，以及为不同数据分配权重。尽管学术界已经提出了若干基于 influence 等方法的数据选择策略，但始终缺乏一个统一、易用且可扩展的训练框架。
+近年来，大模型的发展在很大程度上依赖于大规模且高质量的训练数据。首先，高质量数据集的准备至关重要，这一环节由我们在另一个项目 [DataFlow](https://github.com/OpenDCAI/DataFlow/tree/main) 中完成。在此基础上，训练阶段的数据与模型交互同样关键，例如：在训练过程中进行数据选择、配比，以及为不同数据分配权重。尽管学术界已经提出了若干基于 influence 的方法，比如的基于训练测试数据集分布距离，以及TracIn, Influence Function, PMP等数据选择策略，但始终缺乏一个统一、易用且可扩展的训练框架。
 
 为了解决这一问题，我们基于 [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) 构建了 [DataFlex](https://github.com/OpenDCAI/DataFlex/tree/main)，一个以数据为中心、专注于优化训练过程中数据与模型交互的系统，兼具 **易用性** 与 **训练效果**。
 
