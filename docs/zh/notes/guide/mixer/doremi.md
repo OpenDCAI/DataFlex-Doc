@@ -1,6 +1,6 @@
 ---
 title: DoReMi 数据混合器
-createTime: 2025/01/30 10:00:00
+createTime: 2025/11/27 10:00:00
 icon: material-symbols:balance
 permalink: /zh/guide/mixer/doremi/
 ---
@@ -33,9 +33,6 @@ component_name: static  # 使用静态混合器
 mixture_sample_rule: mixture
 init_mixture_proportions: [0.5, 0.5]  # 初始权重，这里使用均匀分布
 static_mix: true
-warmup_step: 100
-update_step: 200
-update_times: 3
 ```
 
 **关键参数说明**:
@@ -56,7 +53,7 @@ mixers:
 
 ### Step 2: 代理模型权重优化
 
-使用 DoReMi 算法在小型代理模型上动态优化领域权重。算法会通过计算各领域的过剩损失（excess loss）来调整权重。
+使用 DoReMi 算法在小型代理模型上动态优化领域权重。算法会通过计算各领域的过剩损失（excess loss）来调整权重。训练过程中，算法使用均匀采样进行数据选择，但优化后的领域权重会被记录并用于训练步骤中的损失加权。
 
 **配置文件**: `doremi_step2_dynamic_qwen_pt_full.yaml`
 
@@ -82,30 +79,30 @@ mixers:
       # Step 1 训练得到的参考模型路径
       reference_model_path: /path/to/doremi_step1_result/checkpoint-xxx
       # 权重更新学习率 (DoReMi 论文中的 eta)
-      reweight_eta: 1.0
+      reweight_eta: 0.1
       # 权重平滑参数 (DoReMi 论文中的 epsilon)
-      reweight_eps: 1e-3
-      # 每个领域评估的样本数
-      num_eval_samples: 1000
-      # 评估时的批次大小
-      eval_batch_size: 8
+      reweight_eps: 0.01
 ```
 
 **关键参数说明**:
 - `reference_model_path`: Step 1 训练得到的参考模型检查点路径
 - `reweight_eta`: 权重更新的学习率，控制权重调整幅度
 - `reweight_eps`: 平滑参数，防止某些领域权重过小
-- `num_eval_samples`: 每个领域用于计算过剩损失的样本数
 - `warmup_step`: 在开始权重优化前的预热训练步数
 - `update_step`: 每隔多少步更新一次领域权重
+
+**算法行为**:
+- 算法使用**均匀采样**进行数据选择（每个领域具有相等的采样概率）
+- 优化后的 `domain_weights` 会被计算并用于训练过程中的**损失加权**
+- 这种方法确保了公平采样，同时允许损失函数关注更困难的领域
 
 **权重日志**:
 
 训练过程中会自动生成 `doremi_weights.jsonl` 文件，记录每次权重更新的详细信息：
 
 ```json
-{"step": 100, "timestamp": "2025-01-30 10:00:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.3, 0.7], "perdomain_scores": [2.5, 3.2], "reweight_eta": 1.0, "reweight_eps": 0.001}
-{"step": 300, "timestamp": "2025-01-30 10:10:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.25, 0.75], "perdomain_scores": [2.3, 3.5], "reweight_eta": 1.0, "reweight_eps": 0.001}
+{"step": 100, "timestamp": "2025-11-27 10:00:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.3, 0.7], "perdomain_scores": [2.5, 3.2]}
+{"step": 300, "timestamp": "2025-11-27 10:10:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.25, 0.75], "perdomain_scores": [2.3, 3.5]}
 ```
 
 ### Step 3: 目标模型训练
@@ -122,9 +119,6 @@ component_name: static  # 使用静态混合器
 mixture_sample_rule: mixture
 init_mixture_proportions: [0.3, 0.7]  # 使用 Step 2 优化得到的最终权重
 static_mix: true
-warmup_step: 100
-update_step: 200
-update_times: 3
 ```
 
 **关键步骤**:
@@ -198,9 +192,10 @@ plt.show()
 ### 2. 权重优化
 
 - 代理模型建议使用小型模型（如 0.5B-1B 参数）以降低计算成本
-- `num_eval_samples` 设置在 1000-5000 之间，平衡评估准确性和速度
-- `reweight_eta` 通常设置为 1.0，可根据收敛情况调整
-- 建议至少进行 3-5 次权重更新（`update_times`）以观察收敛趋势
+- `reweight_eta` 可根据收敛情况调整（值越大权重变化越快）
+- `reweight_eps` 控制每个领域的最小权重
+- 建议观察收敛趋势以设定合适的权重更新次数（`update_times`）
+- 算法使用均匀采样，但将领域权重应用于损失加权
 
 ### 3. 目标模型训练
 
@@ -237,9 +232,4 @@ A: 可以。如果 `reference_model_path` 设置为 `null`，算法会直接使�
 
 - 论文: [DoReMi: Optimizing Data Mixtures Speeds Up Language Model Pretraining](https://arxiv.org/abs/2305.10429)
 - 项目地址: [DataFlex GitHub](https://github.com/OpenDCAI/DataFlex)
-
-## 相关组件
-
-- [静态混合器 (Static Mixer)](/zh/guide/mixer/static/)
-- [数据混合管理器 (Mixture Manager)](/zh/guide/data/mixture/)
 

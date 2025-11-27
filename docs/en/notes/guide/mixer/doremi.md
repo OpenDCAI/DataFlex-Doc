@@ -1,6 +1,6 @@
 ---
 title: DoReMi Data Mixer
-createTime: 2025/01/30 10:00:00
+createTime: 2025/11/27 10:00:00
 icon: material-symbols:balance
 permalink: /en/guide/mixer/doremi/
 ---
@@ -33,9 +33,6 @@ component_name: static  # Use static mixer
 mixture_sample_rule: mixture
 init_mixture_proportions: [0.5, 0.5]  # Initial weights, uniform distribution
 static_mix: true
-warmup_step: 100
-update_step: 200
-update_times: 3
 ```
 
 **Key Parameters**:
@@ -56,7 +53,7 @@ mixers:
 
 ### Step 2: Proxy Model Weight Optimization
 
-Use the DoReMi algorithm to dynamically optimize domain weights on a small proxy model. The algorithm adjusts weights by computing excess loss for each domain.
+Use the DoReMi algorithm to dynamically optimize domain weights on a small proxy model. The algorithm adjusts weights by computing excess loss for each domain. During training, the algorithm uses uniform sampling for data selection, but the optimized domain weights are recorded and used for loss reweighting in the training step.
 
 **Configuration File**: `doremi_step2_dynamic_qwen_pt_full.yaml`
 
@@ -82,30 +79,30 @@ mixers:
       # Reference model path from Step 1
       reference_model_path: /path/to/doremi_step1_result/checkpoint-xxx
       # Weight update learning rate (eta in DoReMi paper)
-      reweight_eta: 1.0
+      reweight_eta: 0.1
       # Weight smoothing parameter (epsilon in DoReMi paper)
-      reweight_eps: 1e-3
-      # Number of samples to evaluate per domain
-      num_eval_samples: 1000
-      # Batch size for evaluation
-      eval_batch_size: 8
+      reweight_eps: 0.01
 ```
 
 **Key Parameters**:
 - `reference_model_path`: Path to the reference model checkpoint from Step 1
 - `reweight_eta`: Learning rate for weight updates, controls adjustment magnitude
 - `reweight_eps`: Smoothing parameter to prevent domain weights from becoming too small
-- `num_eval_samples`: Number of samples per domain for computing excess loss
 - `warmup_step`: Number of warmup training steps before starting weight optimization
 - `update_step`: Frequency of weight updates (every N steps)
+
+**Algorithm Behavior**:
+- The algorithm uses **uniform sampling** for data selection (each domain has equal probability)
+- The optimized `domain_weights` are computed and used for **loss reweighting** during training
+- This approach ensures fair sampling while allowing the loss function to focus on harder domains
 
 **Weight Logging**:
 
 During training, a `doremi_weights.jsonl` file is automatically generated, recording detailed information for each weight update:
 
 ```json
-{"step": 100, "timestamp": "2025-01-30 10:00:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.3, 0.7], "perdomain_scores": [2.5, 3.2], "reweight_eta": 1.0, "reweight_eps": 0.001}
-{"step": 300, "timestamp": "2025-01-30 10:10:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.25, 0.75], "perdomain_scores": [2.3, 3.5], "reweight_eta": 1.0, "reweight_eps": 0.001}
+{"step": 100, "timestamp": "2025-11-27 10:00:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.3, 0.7], "perdomain_scores": [2.5, 3.2]}
+{"step": 300, "timestamp": "2025-11-27 10:10:00", "domain_names": ["wiki", "c4"], "domain_weights": [0.25, 0.75], "perdomain_scores": [2.3, 3.5]}
 ```
 
 ### Step 3: Target Model Training
@@ -122,9 +119,6 @@ component_name: static  # Use static mixer
 mixture_sample_rule: mixture
 init_mixture_proportions: [0.3, 0.7]  # Use optimized weights from Step 2
 static_mix: true
-warmup_step: 100
-update_step: 200
-update_times: 3
 ```
 
 **Key Steps**:
@@ -198,9 +192,10 @@ plt.show()
 ### 2. Weight Optimization
 
 - Recommend using small proxy models (e.g., 0.5B-1B parameters) to reduce computational cost
-- Set `num_eval_samples` between 1000-5000 to balance evaluation accuracy and speed
-- `reweight_eta` is typically set to 1.0, adjust based on convergence
-- Recommend at least 3-5 weight updates (`update_times`) to observe convergence trends
+- `reweight_eta` can be adjusted based on convergence (higher values lead to faster weight changes)
+- `reweight_eps` controls the minimum weight for each domain
+- Recommend observing convergence trends to set appropriate number of weight updates (`update_times`)
+- The algorithm uses uniform sampling but applies domain weights to loss reweighting
 
 ### 3. Target Model Training
 
@@ -237,9 +232,4 @@ A: Yes. If `reference_model_path` is set to `null`, the algorithm will directly 
 
 - Paper: [DoReMi: Optimizing Data Mixtures Speeds Up Language Model Pretraining](https://arxiv.org/abs/2305.10429)
 - Project: [DataFlex GitHub](https://github.com/OpenDCAI/DataFlex)
-
-## Related Components
-
-- [Static Mixer](/en/guide/mixer/static/)
-- [Mixture Manager](/en/guide/data/mixture/)
 
