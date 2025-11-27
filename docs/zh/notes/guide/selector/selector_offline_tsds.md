@@ -1,5 +1,5 @@
 ---
-title: Tsds 数据选择器
+title: Offline-Tsds 数据选择器
 createTime: 2025/11/01 21:35:45
 permalink: /zh/guide/vkqfowej/
 icon: tdesign:cat
@@ -7,9 +7,9 @@ icon: tdesign:cat
 ---
 
 
-# TSDS Selector 使用介绍
+# Offline TSDS Selector 使用介绍
 
-本文档介绍如何在 **DataFlex** 框架中使用 **TSDS Selector** Data Selection for Task-Specific Model Finetuning实现训练数据的**动态选择**，以在监督微调（SFT）中兼顾**密度代表性**与**多样性**，提升泛化效果。
+本文档介绍如何在 **DataFlex** 框架中使用 **Offline TSDS Selector** Data Selection for Task-Specific Model Finetuning实现训练数据的**动态选择**，以在监督微调（SFT）中兼顾**密度代表性**与**多样性**，提升泛化效果。
 
 ---
 
@@ -61,47 +61,42 @@ git clone https://github.com/OpenDCAI/DataFlex.git
 cd DataFlex
 pip install -e .
 
-# 训练与推理的常用依赖（按需）
-pip install llamafactory
+# 训练与推理的常用依赖
+pip install llamafactory==0.9.3
 
 # TSDS 额外依赖（向量检索与进度条等）
-pip install faiss-cpu tqdm
+pip install faiss-cpu vllm sentence-transformer
 ```
 
 ---
 
-## 3. 选择器注册与初始化示例
+## 3. offline 数据选择
 
-在自定义组件中注册 TSDS 选择器：
-
+在DataFlex\src\dataflex\offline_selector\offline_tsds_selector.py文件中修改训练集、编码模型和参数
 ```python
-from dataflex.selectors import Selector, register_selector
+if __name__ == "__main__":
+    tsds = offline_tsds_Selector(
+        candidate_path="OpenDCAI/DataFlex-selector-openhermes-10w",#训练集
+        query_path="OpenDCAI/DataFlex-selector-openhermes-10w",#验证集
 
-@register_selector("tsds")
-class TsdsSelector(Selector):
-    """Topological & Statistical Density Selector"""
-    def __init__(
-        self,
-        dataset,
-        eval_dataset,
-        accelerator,
-        data_collator,
-        cache_dir,
-        seed: int = 42,
-        max_K: int = 128,
-        kde_K: int = 64,
-        sigma: float = 1.0,
-        alpha: float = 0.5,
-        C: float = 10.0,
-        sample_size: int = 1000,
-        model_name: str = "/home/lianghao/yry/TSDS/bert_chinese"  # 句向量编码模型
-    ):
-        super().__init__(dataset, accelerator, data_collator, cache_dir)
+        # If you want to use vllm,please add "vllm:" before model's name
+        # Otherwise it automatically use sentence-transfromer
+        embed_model="vllm:Qwen/Qwen3-Embedding-0.6B",#编码模型
+        batch_size=32,
+        save_probs_path="tsds_probs.npy",
+        max_K=5000,
+        kde_K=1000,
+        sigma=0.75,
+        alpha=0.6,
+        C=5.0
+    )
+    tsds.selector()
        
 ```
- ** TODO: 将模型名字修改成自己本地模型，否则会默认原地址引发报错 **
 
-> **注意**：此处的 `model_name` 用于将**tokenized**后的文本进一步编码为**句向量**（例如 512 维），常见选择是 BERT/USE 等句向量模型。
+> **注意**：此处的 `model_name` 用于将**tokenized**后的文本进一步编码为**句向量**（例如 512 维），支持vllm和sentence-transformer 推理。
+
+**最终保存为每个训练样本的采样概率**
 
 ---
 
@@ -109,13 +104,13 @@ class TsdsSelector(Selector):
 
 | 参数            | 典型范围     | 含义与建议                                     |
 | ------------- | -------- | ----------------------------------------- |
-| `max_K`       | 64–256   | 近邻检索数量上限，越大越稳但开销更高；建议与数据规模/显存权衡           |
-| `kde_K`       | 16–64    | 用于密度估计的邻居数，越小更敏感、越大更平滑；通常 `kde_K ≤ max_K` |
+| `max_K`       | 64-2000  | 近邻检索数量上限，越大越稳但开销更高；建议与数据规模/显存权衡           |
+| `kde_K`       | 16–10000 | 用于密度估计的邻居数，越小更敏感、越大更平滑；通常 `kde_K ≤ max_K` |
 | `sigma`       | 0.5–2.0  | KDE 的核宽度，过小噪声大，过大易过平滑                     |
 | `alpha`       | 0.3–0.7  | 密度 vs 多样性的权衡系数，靠 1 偏重代表性，靠 0 偏重覆盖度        |
 | `C`           | 0.01–1.0 | 用作筛选比例/阈值/正则系数等控制量；与实现细节相关                |
 | `sample_size` | 500–5000 | 每次候选评估的样本数上限；大幅影响速度与效果                    |
-| `model_name`  | —        | 句向量编码模型路径或名称（如本地 BERT/USE）             |
+| `model_name`  | —        | 句向量编码模型路径或名称（如本地embedding模型）             |
 | `cache_dir`   | —        | 中间结果缓存路径，便于断点续跑                           |
 
 ---
@@ -128,15 +123,11 @@ class TsdsSelector(Selector):
 
 ```yaml
 tsds:
-  name: tsds
-  params:
-    max_K: 128
-    kde_K: 64
-    sigma: 0.8
-    alpha: 0.5
-    C: 10.0
-    model_name: "/home/lianghao/yry/TSDS/bert_chinese"
-    cache_dir: ../dataflex_saves/tsds_output
+    name: tsds
+    params:
+      probs_path: ./src/dataflex/offline_selector/tsds_probs.npy 
+      #默认离线数据选择所在位置的tsds_probs.npy文件
+      cache_dir: ../dataflex_saves/tsds_output
 ```
 
 ---
@@ -147,7 +138,7 @@ tsds:
 
 ```yaml
 ### model
-model_name_or_path: /home/lianghao/yry/LLaMA-Factory/Qwen2.5-0.5B-Instruct
+model_name_or_path: 
 trust_remote_code: true
 
 ### method
@@ -160,8 +151,8 @@ lora_alpha: 8
 # deepspeed: examples/deepspeed/ds_z3_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: alpaca_en_demo
-template: qwen
+dataset: #训练集
+template: qwen （训练模型类型：qwen、llama...）
 cutoff_len: 4096
 # max_samples: 100000000
 overwrite_cache: true
@@ -171,7 +162,7 @@ dataloader_num_workers: 0
 seed: 42
 
 ### output
-output_dir: ../dataflex_saves/qwen/tsds
+output_dir: ../dataflex_saves
 logging_steps: 10
 save_steps: 100
 plot_loss: true
@@ -210,7 +201,6 @@ warmup_step: 400
 update_step: 500
 update_times: 2
 # eval_dataset: alpaca_zh_demo
-eval_dataset: alpaca_zh_demo
 
 ```
 
@@ -218,18 +208,18 @@ eval_dataset: alpaca_zh_demo
 
 * `component_name: tsds`：启用 TSDS 组件。
 * `warmup_step / update_step / update_times`：决定**何时**与**多久**进行一次动态选择；总步数 ≈ `warmup_step + update_step × update_times`。
-* `eval_dataset`：为 TSDS 提供“目标分布”的参考（决定相似度/代表性评估的方向）。
+*  总batch_size=device_number x per_device_train_batch_size x gradient_accumulation_steps
 
 ---
 
 ## 7. 运行训练
 
 ```bash
-FORCE_TORCHRUN=0 DISABLE_VERSION_CHECK=1 dataflex-cli train examples/train_lora/selectors/tsds.yaml
+FORCE_TORCHRUN=1 DISABLE_VERSION_CHECK=1 dataflex-cli train examples/train_lora/selectors/tsds.yaml
 ```
-**不用采用分布式**
+**采用分布式**
 
-训练过程中会在设定的步数触发 TSDS 动态选择：编码训练样本 → 近邻检索/密度估计 → 结合多样性打分 → 选出下一阶段训练子集。
+训练过程中会在设定的步数触发 TSDS 动态选择：根据离线选择的样本采样概率，选出下一阶段训练子集。
 
 ---
 
@@ -245,7 +235,7 @@ adapter_name_or_path: 微调后adpter地址
 template: qwen
 trust_remote_code: true
 
-export_dir: ../dataflex_saves/Qwen2.5-0.5B_lora_sft
+export_dir: ../dataflex_saves
 export_size: 5
 export_device: cpu
 export_legacy_format: false
