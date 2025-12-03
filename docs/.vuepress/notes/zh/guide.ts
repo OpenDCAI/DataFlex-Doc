@@ -39,6 +39,7 @@ export const Guide: ThemeNote = defineNoteConfig({
                 'quickstart',
                 'tutorial',
                 'doremi',
+                'odm',
             ],
         },
         {
