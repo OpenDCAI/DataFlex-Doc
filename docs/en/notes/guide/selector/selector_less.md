@@ -70,6 +70,7 @@ less:
     gradient_type: adam
     proj_dim: 4096
     seed: 123
+    save_interval: 16
 ```
 
 **Parameter Description:**
