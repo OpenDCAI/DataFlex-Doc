@@ -209,7 +209,7 @@ update_times: 2
 **参数说明：**
 
 * `component_name: tsds`：启用 TSDS 组件。
-* `warmup_step / update_step / update_times`：决定**何时**与**多久**进行一次动态选择；总步数 ≈ `warmup_step + update_step × update_times`。
+* `warmup_step / update_step / update_times`：决定每个 Flex epoch 内**何时**与**多久**进行一次动态选择；总步数由 `num_train_epochs` 推导，若 `train_step > 0` 则以 `train_step` 为准。
 *  总batch_size=device_number x per_device_train_batch_size x gradient_accumulation_steps
 
 ---

@@ -123,10 +123,10 @@ eval_dataset: alpaca_zh_demo
 * `output_dir`: Output directory of dynamic fine-tuning (LoRA adapter).
 * `warmup_step`: Number of warmup steps before the first sample selection.
 * `update_step`: Number of steps between each dynamic data selection.
-* `update_times`: Total number of dynamic data selection iterations.
+* `update_times`: Number of dynamic data selection iterations per Flex epoch.
 * `eval_dataset`: Validation dataset.
 
-Both `dataset` and `eval_dataset` can be selected from `DataFlex/data/dataset_info.json` or local JSON files in ShareGPT/Alpaca format. Note: The training set size significantly affects computation cost. Total steps = `warmup_step + update_step × update_times`.
+Both `dataset` and `eval_dataset` can be selected from `DataFlex/data/dataset_info.json` or local JSON files in ShareGPT/Alpaca format. Note: the training set size significantly affects computation cost. Steps per Flex epoch = `warmup_step + update_step × update_times`. Total steps are derived from `num_train_epochs` unless `train_step > 0`.
 
 ---
 

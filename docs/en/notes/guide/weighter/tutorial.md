@@ -26,7 +26,8 @@ train_type: dynamic_weight   # Select trainer type. Available options:
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss  # Select component name, corresponding to components defined in components_cfg_file
 warmup_step: 1
-train_step: 3 # Total training steps (including warm_up)
+num_train_epochs: 1.0
+train_step: 0 # set positive to fix total steps and override num_train_epochs
 ```
 
 ### Parameter Details
@@ -35,7 +36,8 @@ train_step: 3 # Total training steps (including warm_up)
 - `component_name`: Defines the specific strategy for data weighting. For example, `loss` uses a loss-based weighter.
 - `components_cfg_file`: Defines the parameter file containing specific parameters for the corresponding strategy.
 - `warmup_step`: Before the first dynamic weighting, the model needs to perform `warmup_step` steps of regular training. This helps the model establish initial understanding of data distribution.
-- `train_step`: Total training steps (including warmup). Weight Trainer will dynamically weight samples at each training step after warmup completion.
+- `train_step`: Optional fixed total steps. If `train_step > 0`, it overrides `num_train_epochs`; for multi-epoch runs, keep `train_step: 0`.
+- `num_train_epochs`: Controls the number of epochs when `train_step: 0`. `warmup_step` is a global step threshold and does not reset each epoch.
 
 ## How to Add Custom Weighter in DataFlex
 

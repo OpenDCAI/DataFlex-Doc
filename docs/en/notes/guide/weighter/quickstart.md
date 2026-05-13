@@ -21,5 +21,8 @@ train_type: dynamic_weight
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss
 warmup_step: 1
-train_step: 3 # total train steps (including warmup)
+num_train_epochs: 1.0
+train_step: 0 # set positive to fix total steps and override num_train_epochs
 ```
+
+For multi-epoch runs, set `num_train_epochs: N` and keep `train_step: 0`. `warmup_step` is a global step threshold and does not reset each epoch.

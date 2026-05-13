@@ -26,7 +26,8 @@ train_type: dynamic_weight   # 选择训练器类型。可选值包括：
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss  # 选择组件名称，对应 components_cfg_file 中定义的组件
 warmup_step: 1
-train_step: 3 # 总训练步数（包括warm_up）
+num_train_epochs: 1.0
+train_step: 0 # 设为正数时固定总步数，并覆盖 num_train_epochs
 ```
 
 ### 参数详解
@@ -35,7 +36,8 @@ train_step: 3 # 总训练步数（包括warm_up）
 - `component_name`: 定义数据加权的具体策略。例如，`loss` 表示使用基于损失值的加权器。
 - `components_cfg_file`: 定义策略的参数文件，包含对应策略的特定参数。
 - `warmup_step`: 在执行第一次动态加权前，模型需要先进行 `warmup_step` 步的常规训练。这有助于模型建立对数据分布的初步认知。
-- `train_step`: 总训练步数（包括 warmup），Weight Trainer 将在 warmup 完成后的每个训练步骤中对样本进行动态加权。
+- `train_step`: 可选的固定总步数。`train_step > 0` 时覆盖 `num_train_epochs`；多 epoch 训练请保持 `train_step: 0`。
+- `num_train_epochs`: 当 `train_step: 0` 时控制训练 epoch 数。`warmup_step` 是全局 step 阈值，不会在每个 epoch 重置。
 
 ## 如何在 DataFlex 中添加自定义 Weighter
 

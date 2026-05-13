@@ -153,7 +153,7 @@ update_times: 2
 **Notes:**
 
 * `component_name: near` enables the NEAR component.
-* `warmup_step / update_step / update_times` decide **when** and **how often** to re‑select the training subset; total steps ≈ `warmup_step + update_step × update_times`.
+* `warmup_step / update_step / update_times` decide **when** and **how often** to re-select the training subset in each Flex epoch. Total steps are derived from `num_train_epochs` unless `train_step > 0`.
 * total batch_size=device_number x per_device_train_batch_size x gradient_accumulation_steps
 
 ---
@@ -200,5 +200,4 @@ llamafactory-cli export llama3_lora_sft.yaml
 ## 9. Evaluation & Comparison
 
 We recommend using the [DataFlow](https://github.com/OpenDCAI/DataFlow) QA evaluation pipeline to compare **NEAR** against **Less** and **random sampling**. 
-
 

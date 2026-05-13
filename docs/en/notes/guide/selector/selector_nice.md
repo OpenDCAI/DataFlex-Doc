@@ -168,7 +168,7 @@ early_stopping_min_delta: 0.01
 **Parameter description:**
 
 * `component_name`: Must match the `nice` component in `components.yaml`, determining reward backend and projection dimensions.
-* `warmup_step` / `update_step` / `update_times`: Control the dynamic selection schedule; total steps = `warmup_step + update_step × update_times`.
+* `warmup_step` / `update_step` / `update_times`: Control the dynamic selection schedule per Flex epoch. Total steps are derived from `num_train_epochs` unless `train_step > 0`.
 * `eval_dataset`: Validation set (Alpaca/ShareGPT style); reward model is used for scoring during generation.
 * `output_dir`: Path to save LoRA adapters and caches.
 
@@ -226,4 +226,3 @@ The merged model will be saved to:
 
 It is recommended to use the [DataFlow](https://github.com/OpenDCAI/DataFlow)
 [Model QA Evaluation Pipeline](https://opendcai.github.io/DataFlow-Doc/en/guide/2k5wjgls/) to systematically evaluate the generated model, and to inspect the scoring logs in `cache_dir` to analyze the reward model’s sensitivity to different samples.
-

@@ -146,12 +146,12 @@ eval_dataset: alpaca_zh_demo
 * `output_dir`: 动态微调结果（LoRA 适配器）的输出路径。
 * `warmup_step`: 训练初期第一次训练数据选择前，进行warmup的步数。
 * `update_step`: 每次训练数据动态选择的步数。
-* `update_times`: 数据动态选择的总次数。
+* `update_times`: 每个 Flex epoch 内的数据动态选择次数。
 * `eval_dataset`: 验证数据集。
 
 dataset和eval_dataset可选`DataFlex/data/dataset_info.json`中数据，或本地路径下sharegpt或alpaca格式的json数据。注意该方法的情形下，训练集规模会较大影响计算成本。
 
-总步数 = `warmup_step + update_step × update_times`。
+每个 Flex epoch 的步数 = `warmup_step + update_step × update_times`。总步数由 `num_train_epochs` 推导；若 `train_step > 0`，则以 `train_step` 为准。
 
 ---
 
@@ -207,4 +207,3 @@ llamafactory-cli export llama3_lora_sft.yaml
 ## 3. 模型评估
 
 推荐使用[DataFlow](https://github.com/OpenDCAI/DataFlow)的[模型QA能力评估流水线](https://opendcai.github.io/DataFlow-Doc/zh/guide/2k5wjgls/)对生成后的模型进行系统性评估。
-

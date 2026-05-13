@@ -132,6 +132,8 @@ update_times: 2
 eval_dataset: alpaca_zh_demo
 ```
 
+`update_times` is the number of dynamic selections per Flex epoch. For multi-epoch runs, set `num_train_epochs: N` and keep `train_step: 0`; if `train_step > 0`, it fixes total steps and overrides `num_train_epochs`.
+
 ---
 
 ### Step 4: Run Training
@@ -185,4 +187,3 @@ The merged model will be saved in:
 ## 3. Model Evaluation
 
 It is recommended to use the [DataFlow](https://github.com/OpenDCAI/DataFlow) [Model QA Evaluation Pipeline](https://opendcai.github.io/DataFlow-Doc/zh/guide/2k5wjgls/) for systematic evaluation of the generated model.
-

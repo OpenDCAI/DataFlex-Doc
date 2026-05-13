@@ -162,7 +162,7 @@ early_stopping_min_delta: 0.01
 
 **参数说明：**
 * `component_name`: 与 `components.yaml` 中的 `nice` 组件保持一致，决定奖励后端与投影维度等设置。
-* `warmup_step` / `update_step` / `update_times`: 决定动态选择的触发节奏；总步数 = `warmup_step + update_step × update_times`。
+* `warmup_step` / `update_step` / `update_times`: 决定每个 Flex epoch 内的动态选择节奏；总步数由 `num_train_epochs` 推导，若 `train_step > 0` 则以 `train_step` 为准。
 * `eval_dataset`: 验证集，可以是 Alpaca/ShareGPT 样式，生成时会调用奖励模型打分。
 * `output_dir`: LoRA 适配器与缓存保存路径。
 

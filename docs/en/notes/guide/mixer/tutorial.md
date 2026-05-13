@@ -36,7 +36,7 @@ update_times: 2
 - `init_mixture_proportions`: Initial sampling proportions, required when `mixture_sample_rule='mixture'`.
 - `warmup_step`: Before the first dynamic proportion update, the model needs to perform `warmup_step` steps of regular training. This helps the model establish initial understanding of data distribution.
 - `update_step`: Frequency of domain proportion updates. After every `update_step` training steps, the Mixer will be triggered to update domain proportions for the next training phase.
-- `update_times`: Total number of dynamic data proportion calculations during the entire training process. Therefore, total training steps = `(update_times * update_step + warmup_step) * global_batch_size`
+- `update_times`: Number of dynamic data proportion updates per Flex epoch. Total steps are derived from `num_train_epochs` unless `train_step > 0`.
 
 ### Static Mixing Configuration
 
@@ -47,7 +47,7 @@ train_type: dynamic_mix
 static_mix: true                      # Whether to fix initial static mixing proportions (only effective in dynamic_mix trainer)
 mixture_sample_rule: mixture          # Initial sampling rule
 init_mixture_proportions: [0.7, 0.3]  # Initial proportions, can be adjusted by additional algorithms
-train_step: 3                         # Total training steps (only effective in dynamic_mix trainer), excluding warmup and update steps
+train_step: 3                         # fixed total steps; set to 0 to use num_train_epochs
 ```
 
 When static mixing is enabled, the training process will use fixed `init_mixture_proportions` without dynamic adjustment.

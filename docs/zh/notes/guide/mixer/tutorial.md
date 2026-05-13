@@ -36,7 +36,7 @@ update_times: 2
 - `init_mixture_proportions`: 初始采样对应的比例，`mixture_sample_rule='mixture'` 时需要指定。
 - `warmup_step`: 在执行第一次动态配比更新前，模型需要先进行 `warmup_step` 步的常规训练。这有助于模型建立对数据分布的初步认知。
 - `update_step`: 领域配比更新的频率。每当训练进行 `update_step` 步后，Mixer 将被触发，更新领域配比用于下一阶段的训练。
-- `update_times`: 整个训练过程中，动态数据配比计算的总次数。因此总的训练步数为 `(update_times * update_step + warmup_step) * global_batch_size`
+- `update_times`: 每个 Flex epoch 内动态数据配比计算的次数。总步数由 `num_train_epochs` 推导；若 `train_step > 0`，则以 `train_step` 为准。
 
 ### 静态混合配置
 
@@ -47,7 +47,7 @@ train_type: dynamic_mix
 static_mix: true                      # 是否固定初始静态混合比例（仅在dynamic_mix训练器中生效）
 mixture_sample_rule: mixture          # 初始采样规则
 init_mixture_proportions: [0.7, 0.3]  # 对应初始的比例，可通过额外算法自行调整
-train_step: 3                         # 总训练步数（仅在dynamic_mix训练器中生效），不考虑warmup和update steps
+train_step: 3                         # 固定总步数；设为 0 时由 num_train_epochs 控制
 ```
 
 启用静态混合后，训练过程中将使用固定的 `init_mixture_proportions` 比例，不再动态调整。

@@ -127,6 +127,8 @@ update_times: 2
 eval_dataset: alpaca_zh_demo
 ```
 
+`update_times` 表示每个 Flex epoch 内的动态选择次数。Delta Loss 需要 `update_times >= 2`：第一次选择建立 initial loss，后续选择根据 delta loss 更新样本。多 epoch 训练请设置 `num_train_epochs: N` 且保持 `train_step: 0`。
+
 ---
 
 ### 步骤四：运行训练
@@ -178,4 +180,3 @@ llamafactory-cli export llama3_lora_sft.yaml
 ## 3. 模型评估
 
 推荐使用[DataFlow](https://github.com/OpenDCAI/DataFlow)的[模型QA能力评估流水线](https://opendcai.github.io/DataFlow-Doc/zh/guide/2k5wjgls/)对生成后的模型进行系统性评估。
-

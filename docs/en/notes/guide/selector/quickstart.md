@@ -23,6 +23,10 @@ component_name: less
 warmup_step: 4
 update_step: 3
 update_times: 2
+num_train_epochs: 1.0
+train_step: 0
 
 eval_dataset: alpaca_zh_demo
 ```
+
+`update_times` is the number of dynamic selections per Flex epoch. Use `num_train_epochs: 1.0` for one Flex epoch; use `num_train_epochs: N` with `train_step: 0` for multi-epoch runs. If `train_step > 0`, it fixes the total number of steps and overrides `num_train_epochs`.

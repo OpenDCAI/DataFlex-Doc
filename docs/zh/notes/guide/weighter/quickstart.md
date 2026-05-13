@@ -21,5 +21,8 @@ train_type: dynamic_weight
 components_cfg_file: src/dataflex/configs/components.yaml
 component_name: loss
 warmup_step: 1
-train_step: 3 # 总训练步数（包括warm_up） 
+num_train_epochs: 1.0
+train_step: 0 # 设为正数时固定总步数，并覆盖 num_train_epochs
 ```
+
+多 epoch 训练只需设置 `num_train_epochs: N` 并保持 `train_step: 0`。`warmup_step` 是全局 step 阈值，不会在每个 epoch 重置。

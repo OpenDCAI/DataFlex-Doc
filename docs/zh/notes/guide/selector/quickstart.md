@@ -23,6 +23,10 @@ component_name: less
 warmup_step: 4
 update_step: 3
 update_times: 2
+num_train_epochs: 1.0
+train_step: 0
 
 eval_dataset: alpaca_zh_demo
 ```
+
+`update_times` 表示每个 Flex epoch 内的动态选择次数。单个 Flex epoch 使用 `num_train_epochs: 1.0`；多 epoch 使用 `num_train_epochs: N` 且保持 `train_step: 0`。若 `train_step > 0`，则固定总步数并覆盖 `num_train_epochs`。
